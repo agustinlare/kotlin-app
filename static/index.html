@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>APIGolang - agustinlare</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+      <div class="jumbotron">
+        <div class="container">
+          <h2>Connections</h2>
+          <form action="/checker">
+            <div class="form-group">
+              <label for="ipcheck">IP Address reachability</label>
+              <input type="text" name="ipcheck" class="form-control" id="ipcheck" placeholder="10.10.10.10 (default port 443) or 10.10.10.10:80  ">
+            </div>
+            <div class="form-group">
+              <label for="dns">DNS Resolver</label>
+              <input type="text" name="dns" class="form-control" id="dns" aria-describedby="dnsName" placeholder="google.com">
+            </div>
+            <div class="form-group">
+              <label for="mongodb">Test MongoDB Connection</label>
+              <input type="text" name="mongodb" class="form-control" id="mongodb" aria-describedby="connectionString" placeholder="mongodb+srv://&lt;USER&gt;:&lt;PASSWORD&gt;@clave-&lt;ENV&gt;-cluster.vfjzy.mongodb.net">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button><br>
+          </form>
+        </div>
+      </div>
+      <!-- TARJETAS -->
+      <div class="jumbotron">
+        <div class="container">
+          <h2>Other endpoints</h2>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Health</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <form action="/health">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- PING -->
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Ping</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <form action="/ping">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- UNHEALTH -->
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Unhealthy</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <form action="/unhealthy">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- PASSWORD -->
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Passwords</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <form action="/password">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- STRESSTEST -->
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Stress script</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <div class="custom-input-file">
+                        <form id="form" enctype="multipart/form-data" action="/upload" method="POST">
+                          <input class="input file-input" type="file" name="file" /><br><br>
+                          <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Switch health check status -->
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                  <h4>Switch Healthcheck</h4>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <div class="custom-input-file">
+                        <form>
+                          {{ if .HealthStatus }}
+                          <button name="healthswitch" value="healthswitch" class="btn btn-success btn-sm" disabled>Status</button><br>
+                          {{else}}
+                          <button name="healthswitch" value="healthswitch" class="btn btn-danger btn-sm" disabled>Status</button><br>
+                          {{end}}
+                          <br>
+                          <button type="submit"  name="healthswitch" value="healthswitch" class="btn btn-sm btn-outline-secondary">Go</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

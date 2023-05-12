@@ -1,0 +1,33 @@
+---
+version: 0.2
+phases:
+  install:
+    commands:
+      - curl -sS -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
+      - aws s3 cp s3://$BUCKET_CONFIG_NAME/helm/helm-3.8.2-linux-amd64.sh . && bash helm-3.8.2-linux-amd64.sh
+      - chmod +x ./kubectl && mv ./kubectl /usr/local/bin
+  pre_build:
+    commands:
+      - |
+          CHART_NAME=clave-ms-prod
+          SCRIPT_NAME=deploy.sh
+          TAG="$REPOSITORY_NAME.$STAGE.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+          ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+          WEBHOOK_URL=""
+      - aws ecr get-login-password --region us-east-2 | helm registry login --username AWS --password-stdin 479336760672.dkr.ecr.us-east-2.amazonaws.com
+      - helm pull --untar=true oci://479336760672.dkr.ecr.us-east-2.amazonaws.com/$CHART_NAME
+      - $(aws ecr get-login --no-include-email)
+      - aws eks --region us-east-2 update-kubeconfig --name $EKS_CLUSTER_NAME
+      - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  build:
+    commands:
+      - aws s3 cp "s3://$BUCKET_APP_NAME-$STAGE/$REPOSITORY_NAME/application.properties" application.properties
+      - mvn clean install -DskipTests -q -P docker
+      - docker build --tag $REPOSITORY_URI:$TAG .
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI:$TAG
+      - aws s3 cp s3://$BUCKET_CONFIG_NAME/helm/$SCRIPT_NAME . && bash $SCRIPT_NAME
+cache:
+  paths:
+    - '/root/.m2/**/*'
